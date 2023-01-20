@@ -1,4 +1,4 @@
-from flask import request
+from flask import jsonify,make_response
 from flask.views import MethodView
 
 from flask_smorest import Blueprint, abort
@@ -28,7 +28,15 @@ class Login(MethodView):
 
         if user and pbkdf2_sha256.verify(user_data["password"], user.password):
             access_token = create_access_token(identity=user.user_id)
-            return {"access_token": access_token, "user_id": user.user_id, "first_name": user.firstname}
+
+            res = make_response(jsonify({"access_token": access_token, "user_id": user.user_id, "first_name": user.firstname}))
+            res.status = '201'
+            res.headers['Access-Control-Allow-Origin'] = '*'
+            res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+
+            return res
+
+            # return {"access_token": access_token, "user_id": user.user_id, "first_name": user.firstname}
 
         abort(401, message="Invalid credentials")
 
@@ -55,5 +63,12 @@ class Signup(MethodView):
 
         access_token = create_access_token(identity=user.user_id)
 
-        return {"mes": "user created","user_id":user_id,"firstname":firstname,"access_token":access_token}, 201
+        res = make_response(jsonify({"mes": "user created","user_id":user_id,"firstname":firstname,"access_token":access_token}))
+        res.status = '201'
+        res.headers['Access-Control-Allow-Origin'] = '*'
+        res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+
+        return res
+
+        # return {"mes": "user created","user_id":user_id,"firstname":firstname,"access_token":access_token}, 201
 
