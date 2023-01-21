@@ -37,6 +37,7 @@ class Login(MethodView):
         res.status = '201'
         res.headers['Access-Control-Allow-Origin'] = '*'
         res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+        res.headers['Access-Control-Allow-Headers'] = '*'
 
         return res
 
@@ -59,6 +60,7 @@ class Login(MethodView):
         res.status = '200'
         res.headers['Access-Control-Allow-Origin'] = '*'
         res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+        res.headers['Access-Control-Allow-Headers'] = '*'
 
         return res
 
@@ -78,6 +80,7 @@ class Login(MethodView):
         res.status = '200'
         res.headers['Access-Control-Allow-Origin'] = '*'
         res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+        res.headers['Access-Control-Allow-Headers'] = '*'
 
         return res
 

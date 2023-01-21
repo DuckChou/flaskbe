@@ -14,7 +14,11 @@ from flask_jwt_extended import create_access_token
 
 blp = Blueprint("users", __name__, description="Operations on users")
 
+@blp.route("/test")
+class test(MethodView):
 
+    def get(self):
+        return {"mes":"test sus"}
 
 
 @blp.route("/login")
@@ -29,14 +33,15 @@ class Login(MethodView):
         if user and pbkdf2_sha256.verify(user_data["password"], user.password):
             access_token = create_access_token(identity=user.user_id)
 
-            res = make_response(jsonify({"access_token": access_token, "user_id": user.user_id, "first_name": user.firstname}))
-            res.status = '201'
-            res.headers['Access-Control-Allow-Origin'] = '*'
-            res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+            # res = make_response(jsonify({"access_token": access_token, "user_id": user.user_id, "first_name": user.firstname}))
+            # res.status = '201'
+            # res.headers['Access-Control-Allow-Origin'] = '*'
+            # res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+            # res.headers['Access-Control-Allow-Headers'] = '*'
+            #
+            # return res
 
-            return res
-
-            # return {"access_token": access_token, "user_id": user.user_id, "first_name": user.firstname}
+            return {"access_token": access_token, "user_id": user.user_id, "first_name": user.firstname}
 
         abort(401, message="Invalid credentials")
 
@@ -67,6 +72,7 @@ class Signup(MethodView):
         res.status = '201'
         res.headers['Access-Control-Allow-Origin'] = '*'
         res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+        res.headers['Access-Control-Allow-Headers'] = '*'
 
         return res
 
