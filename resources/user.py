@@ -26,6 +26,8 @@ class Login(MethodView):
 
     @blp.arguments(UserSchemaForLogin)
     def post(self, user_data):
+
+
         user = UserModel.query.filter(
             UserModel.username == user_data["username"]
         ).first()
@@ -38,10 +40,10 @@ class Login(MethodView):
             # res.headers['Access-Control-Allow-Origin'] = '*'
             # res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
             # res.headers['Access-Control-Allow-Headers'] = '*'
-            #
+
             # return res
 
-            return {"access_token": access_token, "user_id": user.user_id, "first_name": user.firstname}
+            return {"access_token": access_token, "user_id": user.user_id, "first_name": user.firstname,"username":user.username}
 
         abort(401, message="Invalid credentials")
 
@@ -64,17 +66,18 @@ class Signup(MethodView):
         db.session.flush()
         user_id = user.user_id
         firstname = user.firstname
+        username = user.username
         db.session.commit()
 
         access_token = create_access_token(identity=user.user_id)
+        #
+        # res = make_response(jsonify({"mes": "user created","user_id":user_id,"firstname":firstname,"access_token":access_token}))
+        # res.status = '201'
+        # res.headers['Access-Control-Allow-Origin'] = '*'
+        # res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+        # res.headers['Access-Control-Allow-Headers'] = '*'
+        #
+        # return res
 
-        res = make_response(jsonify({"mes": "user created","user_id":user_id,"firstname":firstname,"access_token":access_token}))
-        res.status = '201'
-        res.headers['Access-Control-Allow-Origin'] = '*'
-        res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
-        res.headers['Access-Control-Allow-Headers'] = '*'
-
-        return res
-
-        # return {"mes": "user created","user_id":user_id,"firstname":firstname,"access_token":access_token}, 201
+        return {"mes": "user created","user_id":user_id,"firstname":firstname,"access_token":access_token,"username":username}, 201
 

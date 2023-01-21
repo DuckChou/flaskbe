@@ -15,9 +15,9 @@ blp = Blueprint("records", __name__, description="Operations on users")
 
 
 @blp.route("/record")
-class Login(MethodView):
+class Record(MethodView):
 
-    @jwt_required()
+    # @jwt_required()
     @blp.arguments(RecordPostSchema)
     def post(self, record_data):
         record = RecordModel(
@@ -33,19 +33,40 @@ class Login(MethodView):
         record_id = record.record_id
         db.session.commit()
 
-        res = make_response(jsonify({"mes":"record added","record_id":record_id}))
-        res.status = '201'
-        res.headers['Access-Control-Allow-Origin'] = '*'
-        res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
-        res.headers['Access-Control-Allow-Headers'] = '*'
+        # res = make_response(jsonify({"mes":"record added","record_id":record_id}))
+        # res.status = '201'
+        # res.headers['Access-Control-Allow-Origin'] = '*'
+        # res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+        # res.headers['Access-Control-Allow-Headers'] = '*'
+        #
+        # return res
 
-        return res
+        return {"mes":"record added","record_id":record_id}, 201
 
-        # return {"mes":"record added","record_id":record_id}, 201
 
-    @jwt_required()
+
+    # @jwt_required()
+    @blp.arguments(RecordSchema)
+    def delete(self,date_data):
+        record = RecordModel.query.get_or_404(date_data["record_id"])
+        db.session.delete(record)
+        db.session.commit()
+
+        # res = make_response(jsonify({"mes": "record deleted"}))
+        # res.status = '200'
+        # res.headers['Access-Control-Allow-Origin'] = '*'
+        # res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+        # res.headers['Access-Control-Allow-Headers'] = '*'
+        #
+        # return res
+
+        return {"mes": "record deleted"}, 200
+
+@blp.route("/record/search")
+class Record2(MethodView):
+    # @jwt_required()
     @blp.arguments(RecordGetSchema)
-    def get(self,date_data):
+    def post(self, date_data):
         records = RecordModel.query.filter(
             RecordModel.date == date_data["date"],
             RecordModel.user_id == date_data["user_id"]
@@ -56,32 +77,14 @@ class Login(MethodView):
             result.append(record.to_json())
 
         # dump_data = RecordSchema.dump(records)
-        res = make_response(jsonify(result))
-        res.status = '200'
-        res.headers['Access-Control-Allow-Origin'] = '*'
-        res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
-        res.headers['Access-Control-Allow-Headers'] = '*'
+        # res = make_response(jsonify(result))
+        # res.status = '200'
+        # res.headers['Access-Control-Allow-Origin'] = '*'
+        # res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+        # res.headers['Access-Control-Allow-Headers'] = '*'
+        #
+        # return res
 
-        return res
-
-
-        # return result
+        return result
 
         # return {"mes":"ok"}
-
-    @jwt_required()
-    @blp.arguments(RecordSchema)
-    def delete(self,date_data):
-        record = RecordModel.query.get_or_404(date_data["record_id"])
-        db.session.delete(record)
-        db.session.commit()
-
-        res = make_response(jsonify({"mes": "record deleted"}))
-        res.status = '200'
-        res.headers['Access-Control-Allow-Origin'] = '*'
-        res.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
-        res.headers['Access-Control-Allow-Headers'] = '*'
-
-        return res
-
-        # return {"mes": "record deleted"}, 200
